@@ -11,6 +11,8 @@ public class Main {
 		
 		VendedorDao vendedorDao = FabricaDao.createVendedorDao();
 		
+		
+		System.out.println("=== TESTE VENDEDOR BUSCAR POR ID ===");
 		Vendedor vendedor = vendedorDao.consultaPorId(3);
 		
 		System.out.println(vendedor);
