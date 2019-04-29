@@ -61,6 +61,22 @@ public class Vendedor implements Serializable {
 		this.salarioBase = salarioBase;
 	}
 
+	public Date getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(Date dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+
+	public Departamento getDepartamento() {
+		return departamento;
+	}
+
+	public void setDepartamento(Departamento departamento) {
+		this.departamento = departamento;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
