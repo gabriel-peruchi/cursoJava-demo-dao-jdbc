@@ -29,6 +29,13 @@ public class Main {
 			System.out.println(vend.toString());
 		}
 		
+		System.out.println("\n=== TESTE BUSCAR TODOS OS VENDEDORES ===");
+		listaVendedores = vendedorDao.consultaTodos();
+		
+		for(Vendedor vend : listaVendedores) {
+			System.out.println(vend.toString());
+		}
+		
 	}
 
 }
