@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,48 @@ public class VendedorDaoJDBC implements VendedorDao {
 
 	@Override
 	public void inserir(Vendedor obj) {
-		// TODO Auto-generated method stub
+		
+		PreparedStatement ps = null;
+		
+		try {
+			
+			ps = conexao.prepareStatement(
+					"INSERT INTO seller" 
+					+ "(Name, Email, BirthDate, BaseSalary, DepartmentId)"
+					+ "VALUES" 
+					+ "(?, ?, ?, ?, ?)",
+					Statement.RETURN_GENERATED_KEYS);
+			
+			ps.setString(1, obj.getNome());
+			ps.setString(2, obj.getEmail());
+			ps.setDate(3, new java.sql.Date(obj.getDataNascimento().getTime()));
+			ps.setDouble(4, obj.getSalarioBase());
+			ps.setInt(5, obj.getDepartamento().getId());
+			
+			int linhasAfetadas = ps.executeUpdate();
+			
+			if(linhasAfetadas > 0) {
+				
+				ResultSet rs = ps.getGeneratedKeys();
+				if(rs.next()){
+					
+					int id = rs.getInt(1);
+					obj.setId(id);
+					
+				}
+				BD.fecharResultSet(rs);
+				
+			}else {
+				throw new BdException("Erro inesperado");
+			}
+			
+		} catch (SQLException e) {
+			
+			throw new BdException("Erro: " + e.getMessage());
+			
+		}finally {
+			BD.fecharStatement(ps);
+		}
 
 	}
 
