@@ -26,46 +26,42 @@ public class VendedorDaoJDBC implements VendedorDao {
 
 	@Override
 	public void inserir(Vendedor obj) {
-		
+
 		PreparedStatement ps = null;
-		
+
 		try {
-			
-			ps = conexao.prepareStatement(
-					"INSERT INTO seller" 
-					+ "(Name, Email, BirthDate, BaseSalary, DepartmentId)"
-					+ "VALUES" 
-					+ "(?, ?, ?, ?, ?)",
-					Statement.RETURN_GENERATED_KEYS);
-			
+
+			ps = conexao.prepareStatement("INSERT INTO seller" + "(Name, Email, BirthDate, BaseSalary, DepartmentId)"
+					+ "VALUES" + "(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+
 			ps.setString(1, obj.getNome());
 			ps.setString(2, obj.getEmail());
 			ps.setDate(3, new java.sql.Date(obj.getDataNascimento().getTime()));
 			ps.setDouble(4, obj.getSalarioBase());
 			ps.setInt(5, obj.getDepartamento().getId());
-			
+
 			int linhasAfetadas = ps.executeUpdate();
-			
-			if(linhasAfetadas > 0) {
-				
+
+			if (linhasAfetadas > 0) {
+
 				ResultSet rs = ps.getGeneratedKeys();
-				if(rs.next()){
-					
+				if (rs.next()) {
+
 					int id = rs.getInt(1);
 					obj.setId(id);
-					
+
 				}
 				BD.fecharResultSet(rs);
-				
-			}else {
+
+			} else {
 				throw new BdException("Erro inesperado");
 			}
-			
+
 		} catch (SQLException e) {
-			
+
 			throw new BdException("Erro: " + e.getMessage());
-			
-		}finally {
+
+		} finally {
 			BD.fecharStatement(ps);
 		}
 
@@ -73,7 +69,30 @@ public class VendedorDaoJDBC implements VendedorDao {
 
 	@Override
 	public void update(Vendedor obj) {
-		// TODO Auto-generated method stub
+		PreparedStatement ps = null;
+
+		try {
+
+			ps = conexao.prepareStatement("UPDATE seller " 
+					+ "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
+					+ "WHERE ID = ?");
+
+			ps.setString(1, obj.getNome());
+			ps.setString(2, obj.getEmail());
+			ps.setDate(3, new java.sql.Date(obj.getDataNascimento().getTime()));
+			ps.setDouble(4, obj.getSalarioBase());
+			ps.setInt(5, obj.getDepartamento().getId());
+			ps.setInt(6, obj.getId());
+
+			ps.executeUpdate();
+
+		} catch (SQLException e) {
+
+			throw new BdException("Erro: " + e.getMessage());
+
+		} finally {
+			BD.fecharStatement(ps);
+		}
 
 	}
 
@@ -143,20 +162,18 @@ public class VendedorDaoJDBC implements VendedorDao {
 
 	@Override
 	public List<Vendedor> consultaTodos() {
-		
+
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 
 		try {
 
 			ps = conexao.prepareStatement(
-					"SELECT seller.*, department.Name as DepName " + 
-					"FROM seller INNER JOIN department " + 
-					"ON seller.DepartmentId = department.Id " + 
-					"ORDER BY Name");
+					"SELECT seller.*, department.Name as DepName " + "FROM seller INNER JOIN department "
+							+ "ON seller.DepartmentId = department.Id " + "ORDER BY Name");
 
 			rs = ps.executeQuery();
-			
+
 			List<Vendedor> listVendedor = new ArrayList<>();
 			Map<Integer, Departamento> mapDepartamento = new HashMap<>();
 
@@ -164,11 +181,11 @@ public class VendedorDaoJDBC implements VendedorDao {
 
 				Departamento dep = mapDepartamento.get(rs.getInt("DepartmentId"));
 
-				if(dep == null) {
+				if (dep == null) {
 					dep = instanciaDepartamento(rs);
 					mapDepartamento.put(rs.getInt("DepartmentId"), dep);
 				}
-				
+
 				Vendedor vendedor = instanciaVendedor(rs, dep);
 
 				listVendedor.add(vendedor);
@@ -194,16 +211,13 @@ public class VendedorDaoJDBC implements VendedorDao {
 		try {
 
 			ps = conexao.prepareStatement(
-					"SELECT seller.*, department.Name as DepName " + 
-					"FROM seller INNER JOIN department " + 
-					"ON seller.DepartmentId = department.Id " + 
-					"WHERE DepartmentId = ? " + 
-					"ORDER BY Name");
+					"SELECT seller.*, department.Name as DepName " + "FROM seller INNER JOIN department "
+							+ "ON seller.DepartmentId = department.Id " + "WHERE DepartmentId = ? " + "ORDER BY Name");
 
 			ps.setInt(1, departamento.getId());
 
 			rs = ps.executeQuery();
-			
+
 			List<Vendedor> listVendedor = new ArrayList<>();
 			Map<Integer, Departamento> mapDepartamento = new HashMap<>();
 
@@ -211,11 +225,11 @@ public class VendedorDaoJDBC implements VendedorDao {
 
 				Departamento dep = mapDepartamento.get(rs.getInt("DepartmentId"));
 
-				if(dep == null) {
+				if (dep == null) {
 					dep = instanciaDepartamento(rs);
 					mapDepartamento.put(rs.getInt("DepartmentId"), dep);
 				}
-				
+
 				Vendedor vendedor = instanciaVendedor(rs, dep);
 
 				listVendedor.add(vendedor);

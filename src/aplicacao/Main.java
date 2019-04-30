@@ -39,7 +39,15 @@ public class Main {
 		Vendedor vend = new Vendedor(null, "José Peruchi", "jose@gmail.com", new Date(), 1500.00, departamento);
 		vendedorDao.inserir(vend);
 		System.out.println("Inserido id = " + vend.getId());
-
+		
+		
+		System.out.println("\n=== TESTE ATUALIZAR UM VENDEDOR ===");
+		
+		vend = vendedorDao.consultaPorId(16);
+		vend.setNome("Mateus Peruchi");
+		vendedorDao.update(vend);
+		System.out.println("Atualizado com sucesso!");
+		
 	}
 
 }
