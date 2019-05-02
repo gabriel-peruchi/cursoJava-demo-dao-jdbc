@@ -5,15 +5,19 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import model.dao.DepartamentoDao;
 import model.dao.FabricaDao;
 import model.dao.VendedorDao;
 import model.entidades.Departamento;
 import model.entidades.Vendedor;
 
+
 public class Main {
 
 	public static void main(String[] args) {
 
+		System.out.println("===== TESTE COM OS VENDEDORES =====");
+		
 		VendedorDao vendedorDao = FabricaDao.createVendedorDao();
 
 		System.out.println("=== TESTE VENDEDOR BUSCAR POR ID ===");
@@ -48,6 +52,36 @@ public class Main {
 		System.out.println("\n=== TESTE DELETAR UM VENDEDOR ===");
 		vendedorDao.deletePorId(Integer.parseInt(JOptionPane.showInputDialog("Digite um id para ser exluido: ")));
 		System.out.println("Deletado com sucesso!");
+		
+		
+		System.out.println("===== TESTE COM OS DEPARTAMENTOS =====");
+		
+		DepartamentoDao depDao = FabricaDao.createDepartamentoDao();
+		
+		System.out.println("=== TESTE INSERIR DEPARTAMENTO ===");
+		depDao.inserir(new Departamento(null, "Comida"));
+		
+		System.out.println("=== TESTE DELETA DEPARTAMENTO POR ID ===");
+		depDao.deletePorId(6);
+		
+		System.out.println("=== TESTE UPDATE DEPARTAMENTO POR ID ===");
+		Departamento dep = new Departamento(3, "SexShop");
+		depDao.update(dep);
+		
+		System.out.println("=== TESTE CONSULTA DEPARTAMENTO POR ID ===");
+		dep = depDao.consultaPorId(3);
+		System.out.println(dep.toString());
+		
+		System.out.println("=== TESTE CONSULTA TODOS DEPARTAMENTOS ===");
+		List<Departamento> listDep = depDao.consultaTodos();
+		for(Departamento x : listDep) {
+			System.out.println(x.toString());
+		}
+		
+		
+		
+		
+		
 	}
 
 }
